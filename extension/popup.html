@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enable throttling</title>
+  <style>
+    .container {
+      width: 300px;
+      background: #1f1a25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      flex-direction: column;
+    }
+    .input-group {
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      color: #58afd1;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .input-group label {
+      cursor: pointer;
+      padding: 0 5px;
+    }
+    /* button by @Giana - https://codepen.io/giana/pen/xdXpJB */
+    .draw-border {
+      box-shadow: inset 0 0 0 4px #58afd1;
+      color: #58afd1;
+      transition: color 0.25s 0.08333333s;
+      position: relative;
+    }
+    .draw-border::before, .draw-border::after {
+      border: 0 solid transparent;
+      box-sizing: border-box;
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      width: 0;
+      height: 0;
+      bottom: 0;
+      right: 0;
+    }
+    .draw-border::before {
+      border-bottom-width: 4px;
+      border-left-width: 4px;
+    }
+    .draw-border::after {
+      border-top-width: 4px;
+      border-right-width: 4px;
+    }
+    .draw-border:hover,
+    .draw-border:disabled {
+      color: #ffe593;
+    }
+    .draw-border:hover::before, .draw-border:hover::after {
+      border-color: #ffe593;
+      transition: border-color 0s, width 0.25s, height 0.25s;
+      width: 100%;
+      height: 100%;
+    }
+    .draw-border:disabled::before, .draw-border:disabled::after {
+      border-color: #ffe593;
+      transition: none;
+      width: 100%;
+      height: 100%;
+    }
+    .draw-border:hover::before {
+      transition-delay: 0s, 0s, 0.25s;
+    }
+    .draw-border:hover::after {
+      transition-delay: 0s, 0.25s, 0s;
+    }
+
+    .btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      line-height: 1.5;
+      font: 700 1.2rem 'Roboto Slab', sans-serif;
+      padding: 1em 2em;
+      letter-spacing: 0.05rem;
+    }
+    .btn:focus {
+      outline: 2px dotted #55d7dc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="input-group">
+      <input type="checkbox" id="apply-to-tab" class="js-apply-to-tab" name="apply-to-tab" value="apply-to-tab" checked disabled>
+      <label for="apply-to-tab">Apply to current tab</label>
+    </div>
+    <div class="input-group">
+      <input type="checkbox" id="apply-to-all-tabs" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs" checked>
+      <label for="apply-to-all-tabs">Apply to all opened tabs</label>
+    </div>
+    <button class="btn draw-border js-enable-throttling" type="button">Apply throttling</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

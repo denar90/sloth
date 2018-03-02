@@ -1,0 +1,18 @@
+{
+    "name": "Sloooow connection by default for testing purposes",
+    "description": "Brings connection like your users have to you ;)",
+    "version": "0.1",
+    "permissions": [
+        "debugger",
+        "storage"
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "browser_action": {
+        "default_title": "Slooow connection by default",
+        "default_popup": "popup.html"
+    },
+    "manifest_version": 2,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0kS6dGB5HIR46uwBLtwBGBtd4NRhKTQGbpyqdqlOUDCbNbpmop9DcCZ4YIXFGKDouYuSv4N4QNWcUjb6Iy3jgVTPT+Qh1z0AE++DLJEMVSWF12RDllVnR7Y6kq+qCi4EfE11K6kRYD80psBGHKChd3Ea9kI0CsSJnzRnkoa8A5MmXlDiJmZG/AY6Y7hAQiAJUKXdTJEJtQE8dEdcL57e87pAhDOfZ++sxJeV3x5M5beVnTSU1ZXnkxWPYv8sUudhh+xP3MsJW9cH5DohkGz6sZxgUMpsMHFAsgGy5Pqf34NkMJk0p+Gg/CPAwfef3v6kJ49eaHI773O6+oAT3xCzswIDAQAB"
+}
