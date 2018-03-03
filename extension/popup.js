@@ -44,6 +44,10 @@ const getBackgroundPage = () => {
     enableThrottlingBtn.disabled = state;
   };
 
+  const toggleApplyToAllTabsCheckbox = state => {
+    applyToAllTabsCheckbox.checked = state;
+  };
+
   storage.get(storage.schema.applyToAllTabs).then(value => {
     if (value && typeof value.applyToAllTabs !== 'undefined') {
       applyToAllTabsCheckbox.checked = value.applyToAllTabs;
@@ -63,6 +67,13 @@ const getBackgroundPage = () => {
     }
   });
 
+  storage.onChanged(changes => {
+    const storageChange = changes[storage.schema.applyToAllTabs];
+    if (storageChange) {
+      toggleApplyToAllTabsCheckbox(storageChange.newValue);
+    }
+  });
+
   enableThrottlingBtn.addEventListener('click', enableThrottling);
 
 
@@ -79,7 +90,6 @@ const getBackgroundPage = () => {
         const tabs = await chromeTabs.getOpenedTabs();
         for (const tab of tabs) {
           attachDebugger(tab);
-          storage.set(storage.schema.applyToAllTabs, enabledToAll);
         }
       } else if (enabled) {
         // @todo make this as feature, store applied tabs by URL(domain name)
@@ -87,7 +97,11 @@ const getBackgroundPage = () => {
         attachDebugger(currentTab);
       } else {
         console.log(new Error('Throttling was not applied'));
+        return;
       }
+
+      storage.set(storage.schema.throttlingEnabled, true);
+      storage.set(storage.schema.applyToAllTabs, enabledToAll);
     } catch (e) {
       console.log(e.message);
     }
@@ -103,8 +117,6 @@ const getBackgroundPage = () => {
       await chromeDebugger.sendCommand(target, 'Network.enable');
       await chromeDebugger.sendCommand(target, 'Network.emulateNetworkConditions',  TYPICAL_MOBILE_THROTTLING_METRICS);
       await chromeDebugger.sendCommand(target, 'Emulation.setCPUThrottlingRate', { rate: TARGET_CPU_RATE });
-
-      storage.set(storage.schema.throttlingEnabled, true);
     } catch(e) {
       console.log(e.message);
     }
