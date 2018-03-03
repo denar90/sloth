@@ -6,7 +6,7 @@ Do you think that users have fast device/connection as you as developer has?
 
 No they are not. Their devices/connection are slow! Very slooow!
 
-![](https://media.giphy.com/media/6olNeyYPutJjq/giphy.gif)  
+![](https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif)  
 
 ---
 
@@ -16,7 +16,7 @@ So enabling network and cpu throttling to have the same user experience.
 
 ## Conditions:
 
-- CPU: `4x` throttling
+- CPU: `2x` throttling
 
 - Network connection: `1.6Mbps` - download, `750Kbps` - upload
 
