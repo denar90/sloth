@@ -8,7 +8,8 @@
     },
     "permissions": [
         "debugger",
-        "storage"
+        "storage",
+        "tabs"
     ],
     "background": {
         "scripts": ["background.js"]

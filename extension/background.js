@@ -4,7 +4,8 @@ class Storage {
 
     this.schema = {
       throttlingEnabled: 'throttlingEnabled',
-      applyToAllTabs: 'applyToAllTabs'
+      applyToAllTabs: 'applyToAllTabs',
+      tabsOrigins: 'tabsOrigins'
     }
   }
 
@@ -29,6 +30,19 @@ class Storage {
           reject('Value can\'t be get');
         }
         resolve(value);
+      });
+    });
+  }
+
+  getByName(name) {
+    return new Promise((resolve, reject) => {
+      this.storage.sync.get(name, value => {
+        if (chrome.runtime.error ||
+          !value)
+        {
+          reject('Value can\'t be get');
+        }
+        resolve(value[name]);
       });
     });
   }
@@ -95,6 +109,10 @@ class Tabs {
 
   onCreated(cb) {
     this.tabs.onCreated.addListener(cb);
+  }
+
+  onUpdated(cb) {
+    this.tabs.onUpdated.addListener(cb);
   }
 }
 

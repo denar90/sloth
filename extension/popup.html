@@ -14,7 +14,7 @@
       flex-direction: column;
     }
     .input-group {
-      margin-bottom: 25px;
+      margin-bottom: 15px;
       display: flex;
       justify-content: center;
       color: #58afd1;
@@ -24,6 +24,13 @@
     .input-group label {
       cursor: pointer;
       padding: 0 5px;
+    }
+    .input-group select {
+      max-width: 200px;
+    }
+    .input-group select:disabled {
+      color: black;
+      background: gray;
     }
     /* button by @Giana - https://codepen.io/giana/pen/xdXpJB */
     .draw-border {
@@ -92,10 +99,14 @@
   <div class="container">
     <div class="input-group">
       <input type="checkbox" id="apply-to-tab" class="js-apply-to-tab" name="apply-to-tab" value="apply-to-tab" checked disabled>
-      <label for="apply-to-tab">Apply to current tab</label>
+      <label for="apply-to-tab">Apply to current tab (URL origin)</label>
     </div>
     <div class="input-group">
-      <input type="checkbox" id="apply-to-all-tabs" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs" checked>
+      <select name="select" class="js-tabs-origins" disabled>
+      </select>
+    </div>
+    <div class="input-group">
+      <input type="checkbox" id="apply-to-all-tabs" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs">
       <label for="apply-to-all-tabs">Apply to all opened tabs</label>
     </div>
     <button class="btn draw-border js-enable-throttling" type="button">Apply throttling</button>

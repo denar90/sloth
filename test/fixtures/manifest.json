@@ -4,7 +4,8 @@
     "version": "0.1",
     "permissions": [
         "debugger",
-        "storage"
+        "storage",
+        "tabs"
     ],
     "background": {
         "scripts": ["background.js"]
