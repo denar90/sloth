@@ -1,7 +1,7 @@
 {
     "name": "Sloth",
     "description": "Brings connection like your users have to you ;)",
-    "version": "0.1",
+    "version": "0.2",
     "icons": {
         "16": "images/icon-16x16.png",
         "120": "images/icon-120x120.png"
