@@ -169,7 +169,7 @@ const getBackgroundPage = () => {
       await chromeDebugger.sendCommand(target, 'Network.emulateNetworkConditions',  TYPICAL_MOBILE_THROTTLING_METRICS);
       await chromeDebugger.sendCommand(target, 'Emulation.setCPUThrottlingRate', { rate: TARGET_CPU_RATE });
     } catch(e) {
-      throw e;
+      console.log(e.message);
     }
   }
 })();
