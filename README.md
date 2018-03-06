@@ -41,3 +41,12 @@ After adding new permissions commands below has to be run.
 2>/dev/null openssl rsa -in key.pem -pubout -outform DER |  shasum -a 256 | head -c32 | tr 0-9a-f a-p
  
 ```
+
+
+## Demo
+
+- `npm run run-regular-site-demo` 
+- open `http://localhost:8000/`
+- `npm run run-throttled-site-demo`
+- open pages `http://localhost:8001/`, `http://localhost:8001/page-2.html` and apply throttling with extension for them
+

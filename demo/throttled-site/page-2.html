@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Throttled site page-2</title>
+  <script>
+    const timing = window.performance.timing;
+    const renderTimer = time => {
+      const el = document.querySelector('h1');
+      if (el)
+        document.querySelector('h1').innerHTML = `Throttled site page-2 is loaded in - ${time} ms`;
+    };
+
+    const interval = setInterval(() => {
+      renderTimer(Date.now() - timing.navigationStart)
+    });
+  </script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.fp.min.js"></script>
+</head>
+<body>
+<h1>Throttled site page-2 is loaded in </h1>
+<img src="https://user-images.githubusercontent.com/6231516/37059624-9d14f2e6-2196-11e8-960f-156dc1eb10ca.gif">
+<script>
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      clearInterval(interval);
+      renderTimer(timing.loadEventEnd - timing.navigationStart);
+    }, 0);
+  }, false);
+</script>
+</body>
+</html>
