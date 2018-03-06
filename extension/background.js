@@ -14,7 +14,7 @@ class Storage {
     data[key] = value;
     return new Promise((resolve, reject) => {
       this.storage.sync.set(data, () => {
-        if (chrome.runtime.error) {
+        if (chrome.runtime.lastError) {
           reject('Value was not set');
         }
 
@@ -26,7 +26,7 @@ class Storage {
   get(key) {
     return new Promise((resolve, reject) => {
       this.storage.sync.get(key, value => {
-        if (chrome.runtime.error) {
+        if (chrome.runtime.lastError) {
           reject('Value can\'t be get');
         }
         resolve(value);
@@ -37,7 +37,7 @@ class Storage {
   getByName(name) {
     return new Promise((resolve, reject) => {
       this.storage.sync.get(name, value => {
-        if (chrome.runtime.error ||
+        if (chrome.runtime.lastError ||
           !value)
         {
           reject('Value can\'t be get');
@@ -60,7 +60,7 @@ class Debugger {
   sendCommand(target, method, commandParams = null) {
     return new Promise((resolve, reject) => {
       this.debugger.sendCommand(target, method, commandParams, () => {
-        if (chrome.runtime.error) {
+        if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         }
 
@@ -72,7 +72,7 @@ class Debugger {
   attach(target, requiredVersion) {
     return new Promise((resolve,reject) => {
       this.debugger.attach(target, requiredVersion, () => {
-        if (chrome.runtime.error) {
+        if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError);
         }
 

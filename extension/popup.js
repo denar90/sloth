@@ -21,7 +21,7 @@ const TYPICAL_MOBILE_THROTTLING_METRICS = {
 
 const getBackgroundPage = () => {
   return new Promise((resolve, reject) => {
-    if (chrome.runtime.error) {
+    if (chrome.runtime.lastError) {
       reject('Background can\'t be get');
     }
 
@@ -169,7 +169,7 @@ const getBackgroundPage = () => {
       await chromeDebugger.sendCommand(target, 'Network.emulateNetworkConditions',  TYPICAL_MOBILE_THROTTLING_METRICS);
       await chromeDebugger.sendCommand(target, 'Emulation.setCPUThrottlingRate', { rate: TARGET_CPU_RATE });
     } catch(e) {
-      console.log(e.message);
+      throw e;
     }
   }
 })();
