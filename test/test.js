@@ -1,7 +1,3 @@
-/**
- * Note: Tests are applied ONLY for functionality when throttling applied to all tabs
- * @todo find the way to fix it
- */
 const assert = require('assert');
 const browserHelpers = require('./helpers/browser');
 const pageHelpers = require('./helpers/page');
