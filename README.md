@@ -20,6 +20,13 @@ So enabling network and cpu throttling to have the same user experience.
 
 - Network connection: `1.6Mbps` - download, `750Kbps` - upload
 
+## Recently asked questions
+
+ - Question: Why do I need it while @chrome-devtools can do the same?
+ - Answer: Yes and no. DevTools can do it for opened tab, but you have to do a lot of manipulations to apply throttling (open dev tools, open proper tab, apply throttling etc). This extension is for lazy people, you just press one button and all URLs with same origin will have throttling. Handy isn't it?
+ 
+ ----
+
 ## Testing
 
 Extension is tested using [puppeteer](https://github.com/GoogleChrome/puppeteer).
@@ -49,4 +56,6 @@ After adding new permissions commands below has to be run.
 - open `http://localhost:8000/`
 - `npm run run-throttled-site-demo`
 - open pages `http://localhost:8001/`, `http://localhost:8001/page-2.html` and apply throttling with extension for them
+
+Watch demo [here](https://twitter.com/denar90_/status/971152543781933056)
 
