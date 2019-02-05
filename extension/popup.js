@@ -40,6 +40,7 @@ const getBackgroundPage = () => {
   const enableThrottlingBtn = document.querySelector('.js-enable-throttling');
   const applyToAllTabsCheckbox = document.querySelector('.js-apply-to-all-tabs');
   const tabsOriginsSelect = document.querySelector('.js-tabs-origins');
+  const autoReloadEnabledCheckbox = document.querySelector('.js-reload-tabs');
 
   const toggleApplyThrottlingBtn = state => {
     enableThrottlingBtn.disabled = state;
@@ -47,6 +48,10 @@ const getBackgroundPage = () => {
 
   const toggleApplyToAllTabsCheckbox = state => {
     applyToAllTabsCheckbox.checked = state;
+  };
+
+  const toggleautoReloadEnabledCheckbox = state => {
+    autoReloadEnabledCheckbox.checked = state;
   };
 
   const addOriginToUIList = origin => {
@@ -85,6 +90,12 @@ const getBackgroundPage = () => {
     }
   });
 
+  storage.get(storage.schema.autoReloadEnabled).then(value => {
+    if (value && typeof value.autoReloadEnabled !== 'undefined') {
+      autoReloadEnabledCheckbox.checked = value.autoReloadEnabled;
+    }
+  });
+
   storage.onChanged(changes => {
     const storageChange = changes[storage.schema.throttlingEnabled];
     if (storageChange) {
@@ -96,6 +107,13 @@ const getBackgroundPage = () => {
     const storageChange = changes[storage.schema.applyToAllTabs];
     if (storageChange) {
       toggleApplyToAllTabsCheckbox(storageChange.newValue);
+    }
+  });
+
+  storage.onChanged(changes => {
+    const storageChange = changes[storage.schema.autoReloadEnabled];
+    if (storageChange) {
+      toggleautoReloadEnabledCheckbox(storageChange.newValue);
     }
   });
 
@@ -138,14 +156,17 @@ const getBackgroundPage = () => {
     try {
       const enabled = document.querySelector('.js-apply-to-tab').checked;
       const enabledToAll = applyToAllTabsCheckbox.checked;
+      const enabledAutoReloadTabs = autoReloadEnabledCheckbox.checked;
 
       if (enabledToAll) {
         const tabs = await chromeTabs.getOpenedTabs();
         for (const tab of tabs) {
           await attachDebugger(tab);
+          if(enabledAutoReloadTabs) await reloadTab(tab);
         }
       } else if (enabled) {
         await attachDebugger(currentTab);
+        if(enabledAutoReloadTabs) await reloadTab(currentTab);
       } else {
         console.log(new Error('Throttling was not applied'));
         return;
@@ -153,6 +174,7 @@ const getBackgroundPage = () => {
 
       await storage.set(storage.schema.throttlingEnabled, true);
       await storage.set(storage.schema.applyToAllTabs, enabledToAll);
+      await storage.set(storage.schema.autoReloadEnabled, enabledAutoReloadTabs);
       await setOriginToStorage(getSelectedOrigin());
     } catch (e) {
       console.log(e.message);
@@ -161,6 +183,7 @@ const getBackgroundPage = () => {
 
   async function attachDebugger(tab) {
     // try/catch to not fail on empty tabs
+    
     try {
       const target = { tabId: tab.id };
       await chromeDebugger.attach(target, '1.1');
@@ -169,6 +192,14 @@ const getBackgroundPage = () => {
       await chromeDebugger.sendCommand(target, 'Network.emulateNetworkConditions',  TYPICAL_MOBILE_THROTTLING_METRICS);
       await chromeDebugger.sendCommand(target, 'Emulation.setCPUThrottlingRate', { rate: TARGET_CPU_RATE });
     } catch(e) {
+      console.log(e.message);
+    }
+  }
+
+  async function reloadTab(tab) {
+    try {
+      chrome.tabs.reload(tab.id);
+    } catch (e) {
       console.log(e.message);
     }
   }

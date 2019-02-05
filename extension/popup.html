@@ -10,8 +10,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 200px;
+      min-height: auto;
       flex-direction: column;
+      padding: 10px 0;
     }
     .input-group {
       margin-bottom: 15px;
@@ -108,6 +109,10 @@
     <div class="input-group">
       <input type="checkbox" id="apply-to-all-tabs" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs">
       <label for="apply-to-all-tabs">Apply to all opened tabs</label>
+    </div>
+    <div class="input-group">
+      <input type="checkbox" id="reload-tabs" class="js-reload-tabs" name="reload-tabs" value="reload-tabs" checked>
+      <label for="reload-tabs">Auto reload tab or tabs after apply</label>
     </div>
     <button class="btn draw-border js-enable-throttling" type="button">Apply throttling</button>
   </div>
