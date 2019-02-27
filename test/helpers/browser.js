@@ -8,6 +8,7 @@ const launchBrowserWithoutExtension = async () => {
     headless: false,
     args: [
       '--no-sandbox',
+      '--disable-setuid-sandbox',
       '--user-agent=PuppeteerAgentFast'
     ]
   });
@@ -18,6 +19,7 @@ const launchBrowserWithExtension = async () => {
     headless: false,
     args: [
       '--no-sandbox',
+      '--disable-setuid-sandbox',
       `--disable-extensions-except=${CRX_PATH}`,
       `--load-extension=${CRX_PATH}`,
       '--user-agent=PuppeteerAgentSlow'
