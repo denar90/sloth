@@ -1,5 +1,10 @@
-dist: trusty
 language: node_js
+dist: trusty
+addons:
+  apt:
+    packages:
+      # This is required to run new chrome on old trusty
+      - libnss3
 node_js:
   - "stable"
 install:
