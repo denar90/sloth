@@ -3,114 +3,226 @@
 <head>
   <meta charset="UTF-8">
   <title>Enable throttling</title>
+
+  <!-- External Style -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/3.0.4/styles/css/base.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/3.0.4/styles/css/choices.min.css" />
+
   <style>
-    .container {
-      width: 300px;
-      background: #1f1a25;
+    body {
+      color: #47474C;
+      background-color: #ffffff;
+      margin: 5rem;
+    }
+    .popup {
+      position: relative;
+      width: 360px;
+      height: auto;
+      background: linear-gradient(180deg, #FFFCE1 0%, #E7E0A2 100%);
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+      border-radius: 10px;
+    }
+    .popup-button {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      background: #f5ca31;
+      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .1s ease-in-out;
+      outline: none;
+    }
+    .popup-button:hover {
+      background: #e9c02c;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
+    }
+    .popup-button:active {
+      background: #d1ab23;
+    }
+    .popup-leading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+    }
+    .popup-action {
+      padding: 1rem;
+      cursor: pointer;
+      opacity: .8;
+    }
+    .popup-action:hover {
+      opacity: 1;
+    }
+    .popup-content {
+      align-items: center;
       justify-content: center;
-      min-height: 200px;
       flex-direction: column;
+      padding: 2rem;
+      display: none;
     }
-    .input-group {
-      margin-bottom: 15px;
+    .popup-content#page-1 {
       display: flex;
-      justify-content: center;
-      color: #58afd1;
+    }
+    .popup-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      margin-bottom: .5rem;
+    }
+    .popup-select {
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+    .popup-text {
+      text-align: center;
       font-size: 14px;
-      cursor: pointer;
+      margin-top: .5rem;
     }
-    .input-group label {
-      cursor: pointer;
-      padding: 0 5px;
+    .choices__inner {
+      width: 100%;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      border: 0;
     }
-    .input-group select {
-      max-width: 200px;
-    }
-    .input-group select:disabled {
-      color: black;
-      background: gray;
-    }
-    /* button by @Giana - https://codepen.io/giana/pen/xdXpJB */
-    .draw-border {
-      box-shadow: inset 0 0 0 4px #58afd1;
-      color: #58afd1;
-      transition: color 0.25s 0.08333333s;
+    .checkboxes {
+      display: block;
       position: relative;
-    }
-    .draw-border::before, .draw-border::after {
-      border: 0 solid transparent;
-      box-sizing: border-box;
-      content: '';
-      pointer-events: none;
-      position: absolute;
-      width: 0;
-      height: 0;
-      bottom: 0;
-      right: 0;
-    }
-    .draw-border::before {
-      border-bottom-width: 4px;
-      border-left-width: 4px;
-    }
-    .draw-border::after {
-      border-top-width: 4px;
-      border-right-width: 4px;
-    }
-    .draw-border:hover,
-    .draw-border:disabled {
-      color: #ffe593;
-    }
-    .draw-border:hover::before, .draw-border:hover::after {
-      border-color: #ffe593;
-      transition: border-color 0s, width 0.25s, height 0.25s;
-      width: 100%;
-      height: 100%;
-    }
-    .draw-border:disabled::before, .draw-border:disabled::after {
-      border-color: #ffe593;
-      transition: none;
-      width: 100%;
-      height: 100%;
-    }
-    .draw-border:hover::before {
-      transition-delay: 0s, 0s, 0.25s;
-    }
-    .draw-border:hover::after {
-      transition-delay: 0s, 0.25s, 0s;
-    }
-
-    .btn {
-      background: none;
-      border: none;
+      padding-left: 35px;
+      margin-bottom: 12px;
       cursor: pointer;
-      line-height: 1.5;
-      font: 700 1.2rem 'Roboto Slab', sans-serif;
-      padding: 1em 2em;
-      letter-spacing: 0.05rem;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
-    .btn:focus {
-      outline: 2px dotted #55d7dc;
+    .checkboxes input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    .checkboxes-span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+    }
+    .checkboxes:hover input ~ .checkboxes-span {
+      background-color: #ffffff;
+    }
+    .checkboxes input:checked ~ .checkboxes-span {
+      background-color: #e9c02c;
+    }
+    .checkboxes-span:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+    .checkboxes input:checked ~ .checkboxes-span:after {
+      display: block;
+    }
+    .checkboxes .checkboxes-span:after {
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid #ffffff;
+      border-width: 0 2px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="input-group">
-      <input type="checkbox" id="apply-to-tab" class="js-apply-to-tab" name="apply-to-tab" value="apply-to-tab" checked disabled>
-      <label for="apply-to-tab">Apply to current tab (URL origin)</label>
+  <div class="popup">
+    <div class="popup-leading">
+      <div class="popup-action">
+        <i class="fas fa-cog"></i>
+      </div>
+      <div class="popup-action">
+        <i class="fas fa-times"></i>
+      </div>
     </div>
-    <div class="input-group">
-      <select name="select" class="js-tabs-origins" disabled>
-      </select>
+    <div class="popup-content" id="page-1">
+      <div class="popup-title">
+        Sloth
+      </div>
+      <div class="popup-select">
+        <select class="form-control js-tabs-origins">
+          <option value="Choice 1">Choice 1</option>
+          <option value="Choice 2">Choice 2</option>
+          <option value="Choice 3">Choice 3</option>
+          <option value="Choice 4">Choice 4</option>
+        </select>
+      </div>
+      <button class="popup-button js-enable-throttling">
+        Apply throttling
+      </button>
+      <div class="popup-text">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+      </div>
     </div>
-    <div class="input-group">
-      <input type="checkbox" id="apply-to-all-tabs" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs">
-      <label for="apply-to-all-tabs">Apply to all opened tabs</label>
+    <div class="popup-content" id="page-2">
+      <div class="popup-title">
+        Sloth
+      </div>
+      <div class="popup-checkbox">
+        <label class="checkboxes">One
+          <input type="checkbox" checked="checked">
+          <span class="checkboxes-span"></span>
+        </label>
+        <label class="checkboxes">Two
+          <input type="checkbox">
+          <span class="checkboxes-span"></span>
+        </label>
+        <label class="checkboxes">Three
+          <input type="checkbox">
+          <span class="checkboxes-span"></span>
+        </label>
+        <label class="checkboxes">Four
+          <input type="checkbox">
+          <span class="checkboxes-span"></span>
+        </label>
+      </div>
     </div>
-    <button class="btn draw-border js-enable-throttling" type="button">Apply throttling</button>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/3.0.4/choices.min.js"></script>
   <script src="popup.js"></script>
+  <script>
+    var isSetting = false
+
+    // Activate a setting page
+    document.querySelector('.fas.fa-cog').addEventListener('click', function() {
+      if (!isSetting) {
+        document.querySelector('.popup-content#page-1').style.display = 'none'
+        document.querySelector('.popup-content#page-2').style.display = 'flex'
+      } else {
+        document.querySelector('.popup-content#page-1').style.display = 'flex'
+        document.querySelector('.popup-content#page-2').style.display = 'none'
+      }
+
+      isSetting = !isSetting
+    }, false)
+
+    // Activate a choices
+    new Choices(document.querySelector('select'), {
+      removeItemButton: true,
+    })
+
+    // Todo activate close button
+  </script>
 </body>
 </html>
