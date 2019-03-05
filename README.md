@@ -6,7 +6,9 @@ Do you think that users have fast device/connection as you as developer has?
 
 No they are not. Their devices/connection are slow! Very slooow!
 
-![](https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif)  
+![](https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif)
+
+![](https://user-images.githubusercontent.com/17744043/53821378-46674100-3fa0-11e9-8087-ccbd317a9ca5.png)
 
 ---
 
