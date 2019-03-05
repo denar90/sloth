@@ -30,6 +30,7 @@ const changeSelectedTabOriginValue = async (page, mockUrl) => {
 const applyThrottlingForCurrentTab = async (browser, URL) => {
   try {
     const extensionPopUpPage = await openExtensionPopUp(browser);
+    await extensionPopUpPage.click('input.js-reload-tabs');
     // stub select value
     await changeSelectedTabOriginValue(extensionPopUpPage, URL);
     await applyThrottling(extensionPopUpPage);
@@ -50,6 +51,7 @@ const applyThrottlingAllTabs = async (browser, URL) => {
     await page.goto(URL);
 
     const extensionPopUpPage = await openExtensionPopUp(browser);
+    await extensionPopUpPage.click('input.js-reload-tabs');
     await toggleThrottlingForAllTabs(extensionPopUpPage, true);
 
     await page.reload();
