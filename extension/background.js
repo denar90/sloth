@@ -5,7 +5,8 @@ class Storage {
     this.schema = {
       throttlingEnabled: 'throttlingEnabled',
       applyToAllTabs: 'applyToAllTabs',
-      tabsOrigins: 'tabsOrigins'
+      tabsOrigins: 'tabsOrigins',
+      autoReloadEnabled: 'autoReloadEnabled'
     }
   }
 

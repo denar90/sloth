@@ -84,6 +84,69 @@ describe('Throttling extension', function () {
         assert.equal(selectedTabURLOrigin, 'chrome-extension://daclkijhjpmgpmjnlppibebgficnlfop');
       });
     });
+
+    describe('Reload tab after throttling', function () {
+      it('should be enabled by default', async function () {
+        this.timeout(TEST_TIMEOUT);
+
+        const extensionPopUpPage = await pageHelpers.openExtensionPopUp(browser);
+        const checkboxChecked = await extensionPopUpPage.evaluate(() => document.querySelector('.js-reload-tabs').checked);
+        assert(checkboxChecked);
+      });
+      it('should reload current tab after throttling if enabled', async function() {
+        this.timeout(TEST_TIMEOUT);
+        const extensionPopUpPage = await pageHelpers.openExtensionPopUp(browser);
+
+        await Promise.all([
+          extensionPopUpPage.waitForNavigation({
+            waitUnitl: ['load', 'domcontentloaded'],
+            timeout: 100
+          }),
+          extensionPopUpPage.click('button.js-enable-throttling')
+        ]).then(res => {
+          assert.ok(res[0].ok());
+        })
+          .catch(err => {
+            throw err;
+          });
+        await browser.close();
+      });
+      it('should reload all tabs after throttling if enabled', async function() {
+        this.timeout(TEST_TIMEOUT);
+        
+        const pageUrl1 = 'https://bing.com';
+        const pageUrl2 = 'https://google.com';
+
+        const page1 = await browser.newPage();
+        await page1.goto(pageUrl1);
+        const page2 = await browser.newPage();
+        await page2.goto(pageUrl2);
+
+        const extensionPopUpPage = await pageHelpers.openExtensionPopUp(browser);
+        await extensionPopUpPage.click('input.js-apply-to-all-tabs');
+        const waitForOption = {
+          waitUnitl: ['load', 'domcontentloaded'],
+          timeout: 5000
+        };
+        await Promise.all([
+          extensionPopUpPage.waitForNavigation(waitForOption),
+          page1.waitForNavigation(waitForOption),
+          page2.waitForNavigation(waitForOption),
+          extensionPopUpPage.click('button.js-enable-throttling')
+        ]).then(res => {
+          assert.ok(res.every(item => {
+            if (typeof item === 'undefined') {
+              return true; // click method resolve promise and return undefined as a result
+            }
+            return true === item.ok();
+          }));
+        })
+          .catch(err => {
+            throw err;
+          });
+        await browser.close();
+      })
+    });
   });
 
   describe('Apply throttling', function () {
