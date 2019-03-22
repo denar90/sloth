@@ -29,6 +29,11 @@ export class PopupView {
     return document.querySelector('.js-main-content');
   }
 
+  get autoReloadEnabledCheckbox() {
+    return document.querySelector('.js-reload-tabs');
+  }
+
+
   constructor() {
     this.originsEl = new Choices(PopupView.tabsOriginsSelect, {
       removeItemButton: true,
