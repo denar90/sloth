@@ -2,227 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Enable throttling</title>
+  <title>Sloth: Brings connection like your users have to you ;)</title>
 
   <!-- External Style -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/3.0.4/styles/css/base.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/3.0.4/styles/css/choices.min.css" />
-
-  <style>
-    body {
-      color: #47474C;
-      background-color: #ffffff;
-      margin: 5rem;
-    }
-    .popup {
-      position: relative;
-      width: 360px;
-      height: auto;
-      background: linear-gradient(180deg, #FFFCE1 0%, #E7E0A2 100%);
-      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
-      border-radius: 10px;
-    }
-    .popup-button {
-      border: none;
-      color: white;
-      padding: 15px 32px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      background: #f5ca31;
-      box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all .1s ease-in-out;
-      outline: none;
-    }
-    .popup-button:hover {
-      background: #e9c02c;
-      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
-    }
-    .popup-button:active {
-      background: #d1ab23;
-    }
-    .popup-leading {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .popup-action {
-      padding: 1rem;
-      cursor: pointer;
-      opacity: .8;
-    }
-    .popup-action:hover {
-      opacity: 1;
-    }
-    .popup-content {
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      padding: 2rem;
-      display: none;
-    }
-    .popup-content#page-1 {
-      display: flex;
-    }
-    .popup-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 36px;
-      margin-bottom: .5rem;
-    }
-    .popup-select {
-      width: 100%;
-      margin: 1.5rem 0;
-    }
-    .popup-text {
-      text-align: center;
-      font-size: 14px;
-      margin-top: .5rem;
-    }
-    .choices__inner {
-      width: 100%;
-      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      border: 0;
-    }
-    .checkboxes {
-      display: block;
-      position: relative;
-      padding-left: 35px;
-      margin-bottom: 12px;
-      cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-    .checkboxes input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-    .checkboxes-span {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 25px;
-      width: 25px;
-    }
-    .checkboxes:hover input ~ .checkboxes-span {
-      background-color: #ffffff;
-    }
-    .checkboxes input:checked ~ .checkboxes-span {
-      background-color: #e9c02c;
-    }
-    .checkboxes-span:after {
-      content: "";
-      position: absolute;
-      display: none;
-    }
-    .checkboxes input:checked ~ .checkboxes-span:after {
-      display: block;
-    }
-    .checkboxes .checkboxes-span:after {
-      left: 9px;
-      top: 5px;
-      width: 5px;
-      height: 10px;
-      border: solid #ffffff;
-      border-width: 0 2px 3px 0;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      transform: rotate(45deg);
-    }
-  </style>
+  <link rel="stylesheet" href="dist/popup.css" />
 </head>
 <body>
   <div class="popup">
     <div class="popup-leading">
       <div class="popup-action">
-        <i class="fas fa-cog"></i>
+        <i class="fas fa-cog js-settings-btn"></i>
       </div>
       <div class="popup-action">
         <i class="fas fa-times"></i>
       </div>
     </div>
-    <div class="popup-content" id="page-1">
-      <div class="popup-title">
+    <div class="popup-content js-main-content">
+      <h1 class="popup-title">
         Sloth
-      </div>
+      </h1>
+      <p class="popup-description">Brings real user experience ;)</p>
       <div class="popup-select">
         <select class="form-control js-tabs-origins">
-          <option value="Choice 1">Choice 1</option>
-          <option value="Choice 2">Choice 2</option>
-          <option value="Choice 3">Choice 3</option>
-          <option value="Choice 4">Choice 4</option>
+          <option value="all">All tabs</option>
         </select>
       </div>
       <button class="popup-button js-enable-throttling">
         Apply throttling
       </button>
-      <div class="popup-text">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+      <div class="popup-description js-current-origin-throttling-description">
+        Will be applied to current tab (URL origin)
+      </div>
+      <div class="popup-description hide js-all-origins-throttling-description">
+        Will be applied to all tabs
       </div>
     </div>
-    <div class="popup-content" id="page-2">
-      <div class="popup-title">
-        Sloth
-      </div>
+    <div class="popup-content js-settings-content hide">
+      <h1 class="popup-title">
+        Sloth Settings
+      </h1>
       <div class="popup-checkbox">
-        <label class="checkboxes">One
-          <input type="checkbox" checked="checked">
+        <label class="checkboxes disabled">Apply to all opened tabs (Deprecated. Use select option instead)
+          <input type="checkbox" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs">
           <span class="checkboxes-span"></span>
         </label>
-        <label class="checkboxes">Two
-          <input type="checkbox">
-          <span class="checkboxes-span"></span>
-        </label>
-        <label class="checkboxes">Three
-          <input type="checkbox">
-          <span class="checkboxes-span"></span>
-        </label>
-        <label class="checkboxes">Four
-          <input type="checkbox">
+        <label class="checkboxes" >Auto reload tab or tabs after apply
+          <input type="checkbox" class="js-reload-tabs" name="reload-tabs" value="reload-tabs" checked>
           <span class="checkboxes-span"></span>
         </label>
       </div>
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/3.0.4/choices.min.js"></script>
-  <script src="popup.js"></script>
-  <script>
-    var isSetting = false
-
-    // Activate a setting page
-    document.querySelector('.fas.fa-cog').addEventListener('click', function() {
-      if (!isSetting) {
-        document.querySelector('.popup-content#page-1').style.display = 'none'
-        document.querySelector('.popup-content#page-2').style.display = 'flex'
-      } else {
-        document.querySelector('.popup-content#page-1').style.display = 'flex'
-        document.querySelector('.popup-content#page-2').style.display = 'none'
-      }
-
-      isSetting = !isSetting
-    }, false)
-
-    // Activate a choices
-    new Choices(document.querySelector('select'), {
-      removeItemButton: true,
-    })
-
-    // Todo activate close button
-  </script>
+  <script src="dist/popup.js"></script>
 </body>
 </html>
