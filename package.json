@@ -1,6 +1,6 @@
 {
   "name": "Sloth",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Brings connection like your users have to you ;)",
   "scripts": {
     "build": "rollup --config",
@@ -8,7 +8,7 @@
     "run-regular-site-demo": "cd demo/regular-site && python -m SimpleHTTPServer 8000",
     "run-throttled-site-demo": "cd demo/throttled-site && python -m SimpleHTTPServer 8001"
   },
-  "author": "",
+  "author": "denar90",
   "license": "MIT",
   "devDependencies": {
     "cssnano": "^4.1.10",

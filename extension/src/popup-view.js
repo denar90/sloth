@@ -9,16 +9,24 @@ export class PopupView {
     return document.querySelector('.js-tabs-origins');
   }
 
-  get currentOriginThrottlingDescription() {
+  static get autoReloadEnabledCheckbox() {
+    return document.querySelector('.js-reload-tabs');
+  }
+
+  static get currentOriginThrottlingDescription() {
     return document.querySelector('.js-current-origin-throttling-description');
   }
 
-  get allOriginsThrottlingDescription() {
+  static get allOriginsThrottlingDescription() {
     return document.querySelector('.js-all-origins-throttling-description');
   }
 
   get settingsBtn() {
     return document.querySelector('.js-settings-btn');
+  }
+
+  get closeBtn() {
+    return document.querySelector('.js-close-btn');
   }
 
   get settingsContent() {
@@ -36,41 +44,50 @@ export class PopupView {
     this.isSettingContent = false;
   }
 
+  static toggleApplyThrottlingBtn(state) {
+    PopupView.enableThrottlingBtn.disabled = state;
+  }
+
+  static toggleautoReloadEnabledCheckbox(state) {
+    PopupView.autoReloadEnabledCheckbox.checked = state;
+  }
+
+  static toggleApplyThrottlingDescription(originValue) {
+    if (originValue === 'all') {
+      PopupView.currentOriginThrottlingDescription.classList.toggle('hide');
+      PopupView.allOriginsThrottlingDescription.classList.toggle('hide');
+    } else {
+      PopupView.allOriginsThrottlingDescription.classList.toggle('hide');
+      PopupView.currentOriginThrottlingDescription.classList.toggle('hide');
+    }
+  }
+
+  static close() {
+    window.close();
+  }
+
   attachListeners() {
     PopupView.enableThrottlingBtn.addEventListener('click', this.onEnableThrottling);
 
     this.originsEl.passedElement.element.addEventListener('choice', event => {
-      this.toggleApplyThrottlingDescription(event.detail.choice.value)
+      PopupView.toggleApplyThrottlingDescription(event.detail.choice.value)
     });
 
     this.settingsBtn.addEventListener('click', this.toggleSettingsContent.bind(this));
+    this.closeBtn.addEventListener('click', PopupView.close);
   }
 
   onEnableThrottling() {
     throw new Error('Implement method onEnableThrottling');
   }
 
-  static toggleApplyThrottlingBtn(state) {
-    PopupView.enableThrottlingBtn.disabled = state;
-  };
-
-  toggleApplyThrottlingDescription(originValue) {
-    if (originValue === 'all') {
-      this.currentOriginThrottlingDescription.classList.add('hide');
-      this.allOriginsThrottlingDescription.classList.remove('hide');
-    } else {
-      this.allOriginsThrottlingDescription.classList.add('hide');
-      this.currentOriginThrottlingDescription.classList.remove('hide');
-    }
-  };
-
   toggleSettingsContent() {
     if (this.isSettingContent) {
-      this.settingsContent.classList.remove('hide');
-      this.mainContent.classList.add('hide');
+      this.settingsContent.classList.toggle('hide');
+      this.mainContent.classList.toggle('hide');
     } else {
-      this.settingsContent.classList.add('hide');
-      this.mainContent.classList.remove('hide');
+      this.settingsContent.classList.toggle('hide');
+      this.mainContent.classList.toggle('hide');
     }
 
     this.isSettingContent = !this.isSettingContent;
