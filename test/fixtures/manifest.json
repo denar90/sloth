@@ -2,16 +2,20 @@
     "name": "Sloooow connection by default for testing purposes",
     "description": "Brings connection like your users have to you ;)",
     "version": "0.1",
+    "icons": {
+        "16": "images/icon-16x16.png",
+        "120": "images/icon-120x120.png"
+    },
     "permissions": [
         "debugger",
         "storage",
         "tabs"
     ],
     "background": {
-        "scripts": ["background.js"]
+        "scripts": ["dist/background.js"]
     },
     "browser_action": {
-        "default_title": "Slooow connection by default",
+        "default_title": "Sloth - slooow connection by default",
         "default_popup": "popup.html"
     },
     "manifest_version": 2,

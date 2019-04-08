@@ -5,23 +5,28 @@ import { PopupView } from './popup-view';
 import '../styles/styles.scss';
 
 // Huge shot out to Lighthouse for const values
-const LATENCY_FACTOR = 3.75;
-const THROUGHPUT_FACTOR = 0.9;
+const DEVTOOLS_RTT_ADJUSTMENT_FACTOR = 3.75;
+const DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR = 0.9;
+const TARGET_CPU_RATE = 4;
 
-const TARGET_LATENCY = 150; // 150ms
-const TARGET_DOWNLOAD_THROUGHPUT = Math.floor(1.6 * 1024 * 1024 / 8); // 1.6Mbps
-const TARGET_UPLOAD_THROUGHPUT = Math.floor(750 * 1024 / 8); // 750Kbps
-const TARGET_CPU_RATE = 2;
-
-const TYPICAL_MOBILE_THROTTLING_METRICS = {
-  targetLatency: TARGET_LATENCY,
-  latency: TARGET_LATENCY * LATENCY_FACTOR,
-  targetDownloadThroughput: TARGET_DOWNLOAD_THROUGHPUT,
-  downloadThroughput: TARGET_DOWNLOAD_THROUGHPUT * THROUGHPUT_FACTOR,
-  targetUploadThroughput: TARGET_UPLOAD_THROUGHPUT,
-  uploadThroughput: TARGET_UPLOAD_THROUGHPUT * THROUGHPUT_FACTOR,
-  offline: false,
+const throttlingSettings = {
+  rttMs: 150,
+  throughputKbps: 1.6 * 1024,
+  requestLatencyMs: 150 * DEVTOOLS_RTT_ADJUSTMENT_FACTOR,
+  downloadThroughputKbps: 1.6 * 1024 * DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR,
+  uploadThroughputKbps: 750 * DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR,
+  cpuSlowdownMultiplier: 4,
 };
+
+const conditions = {
+  offline: false,
+  latency: throttlingSettings.requestLatencyMs || 0,
+  downloadThroughput: throttlingSettings.downloadThroughputKbps || 0,
+  uploadThroughput: throttlingSettings.uploadThroughputKbps || 0,
+};
+
+conditions.downloadThroughput = Math.floor(conditions.downloadThroughput * 1024 / 8);
+conditions.uploadThroughput = Math.floor(conditions.uploadThroughput * 1024 / 8);
 
 const getBackgroundPage = () => {
   return new Promise((resolve, reject) => {
@@ -39,30 +44,33 @@ contentLoaded.then(async () => {
   const chromeDebugger = background.chromeDebugger;
   const chromeTabs = background.chromeTabs;
 
-  const view = new PopupView();
-  view.onEnableThrottling = async () => {
-    const selectedOriginValue = view.originsEl.getValue();
-    const enabledToAll = selectedOriginValue === 'all';
-    const enabledAutoReloadTabs = PopupView.autoReloadEnabledCheckbox.checked;
+  const currentTab = await chromeTabs.getCurrentTab();
+  const attachDebugger = async tab => {
+    // try/catch to not fail on empty tabs
 
-    if (enabledToAll) {
-      const tabs = await chromeTabs.getOpenedTabs();
-      for (const tab of tabs) {
-        await attachDebugger(tab);
-        if (enabledAutoReloadTabs) await reloadTab(tab);
-      }
-    } else {
-      await attachDebugger(currentTab);
-      if (enabledAutoReloadTabs) await reloadTab(currentTab);
+    try {
+      const target = { tabId: tab.id };
+      await chromeDebugger.attach(target, '1.1');
+      await chromeDebugger.sendCommand(target, 'Network.enable');
+      await chromeDebugger.sendCommand(target, 'Network.emulateNetworkConditions', conditions);
+      await chromeDebugger.sendCommand(target, 'Emulation.setCPUThrottlingRate', { rate: TARGET_CPU_RATE });
+    } catch(e) {
+      console.log(e.message);
     }
-
-    await storage.set(storage.schema.throttlingEnabled, true);
-    await storage.set(storage.schema.applyToAllTabs, enabledToAll);
-    await storage.set(storage.schema.autoReloadEnabled, enabledAutoReloadTabs);
-    await setOriginToStorage(selectedOriginValue);
-    PopupView.close();
   };
-  view.attachListeners();
+
+  const attachDebuggerToNewTab = async tab => {
+    const throttlingEnabled = await storage.getByName(storage.schema.throttlingEnabled);
+    if (!throttlingEnabled) return;
+
+    const currentOrigin = new URL(tab.url).origin;
+    const tabsOrigins = await storage.getByName(storage.schema.tabsOrigins);
+    if (typeof tabsOrigins !== 'undefined' && tabsOrigins.length > 0) {
+      if (tabsOrigins.includes(currentOrigin)) {
+        await attachDebugger(tab);
+      }
+    }
+  };
 
   const setOriginToStorage = async newOrigin => {
     const data = await storage.get(storage.schema.tabsOrigins);
@@ -74,6 +82,36 @@ contentLoaded.then(async () => {
       }
     }
   };
+
+  const view = new PopupView();
+  view.onEnableThrottling = async () => {
+    const selectedOriginValue = view.originsEl.getValue().value;
+    const enabledToAll = selectedOriginValue === 'all';
+    const enabledAutoReloadTabs = PopupView.autoReloadEnabledCheckbox.checked;
+
+    if (enabledToAll) {
+      const tabs = await chromeTabs.getOpenedTabs();
+      for (const tab of tabs) {
+        await attachDebugger(tab);
+        if (enabledAutoReloadTabs) await chromeTabs.reloadTab(tab.id);
+      }
+    } else {
+      await attachDebugger(currentTab);
+      if (enabledAutoReloadTabs) await chromeTabs.reloadTab(currentTab.id);
+    }
+
+    await storage.set(storage.schema.throttlingEnabled, true);
+    await storage.set(storage.schema.applyToAllTabs, enabledToAll);
+    await storage.set(storage.schema.autoReloadEnabled, enabledAutoReloadTabs);
+    await setOriginToStorage(selectedOriginValue);
+    PopupView.close();
+  };
+  view.attachListeners();
+
+  if (currentTab.url) {
+    const currentOrigin = new URL(currentTab.url).origin;
+    view.addOriginToUIList(currentOrigin);
+  }
 
   storage.get(storage.schema.throttlingEnabled).then(value => {
     if (value && typeof value.throttlingEnabled !== 'undefined') {
@@ -104,16 +142,9 @@ contentLoaded.then(async () => {
   storage.onChanged(changes => {
     const storageChange = changes[storage.schema.autoReloadEnabled];
     if (storageChange) {
-      PopupView.toggleautoReloadEnabledCheckbox(storageChange.newValue);
+      PopupView.toggleAutoReloadEnabledCheckbox(storageChange.newValue);
     }
   });
-
-  const currentTab = await chromeTabs.getCurrentTab();
-
-  if (currentTab.url) {
-    const currentOrigin = new URL(currentTab.url).origin;
-    view.addOriginToUIList(currentOrigin);
-  }
 
   chromeTabs.onCreated(async tab => {
     const throttlingEnabled = await storage.getByName(storage.schema.throttlingEnabled);
@@ -124,37 +155,14 @@ contentLoaded.then(async () => {
 
   chromeTabs.onUpdated(async (tabId, changeInfo, tab) => {
     if (changeInfo.status !== 'complete') return;
-    if (!tab.url) return;
+    if (tabId === tab.id) return;
 
     await attachDebuggerToNewTab(tab);
   });
 
-  const attachDebuggerToNewTab = async tab => {
-    const throttlingEnabled = await storage.getByName(storage.schema.throttlingEnabled);
-    if (!throttlingEnabled) return;
-
-    const currentOrigin = new URL(tab.url).origin;
-    const tabsOrigins = await storage.getByName(storage.schema.tabsOrigins);
-    if (typeof tabsOrigins !== 'undefined' && tabsOrigins.length > 0) {
-      if (tabsOrigins.includes(currentOrigin)) {
-        await attachDebugger(tab);
-      }
-    }
-  };
-
-  async function attachDebugger(tab) {
-    const target = { tabId: tab.id };
-    await chromeDebugger.attach(target, '1.1');
-
-    await chromeDebugger.sendCommand(target, 'Network.enable');
-    await chromeDebugger.sendCommand(target, 'Network.emulateNetworkConditions', TYPICAL_MOBILE_THROTTLING_METRICS);
-    await chromeDebugger.sendCommand(target, 'Emulation.setCPUThrottlingRate', { rate: TARGET_CPU_RATE });
-  }
-
-  async function reloadTab(tab) {
-    chrome.tabs.reload(tab.id);
-  }
-
+  chromeDebugger.debugger.onDetach.addListener(() => {
+    storage.set(storage.schema.throttlingEnabled, false);
+  });
 }).catch(e => {
   console.error(e.message);
 });
