@@ -48,7 +48,7 @@ export class PopupView {
     PopupView.enableThrottlingBtn.disabled = state;
   }
 
-  static toggleautoReloadEnabledCheckbox(state) {
+  static toggleAutoReloadEnabledCheckbox(state) {
     PopupView.autoReloadEnabledCheckbox.checked = state;
   }
 
