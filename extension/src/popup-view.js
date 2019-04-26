@@ -17,10 +17,6 @@ export class PopupView {
     return document.querySelector('.js-current-origin-throttling-description');
   }
 
-  static get allOriginsThrottlingDescription() {
-    return document.querySelector('.js-all-origins-throttling-description');
-  }
-
   get settingsBtn() {
     return document.querySelector('.js-settings-btn');
   }
@@ -52,14 +48,8 @@ export class PopupView {
     PopupView.autoReloadEnabledCheckbox.checked = state;
   }
 
-  static toggleApplyThrottlingDescription(originValue) {
-    if (originValue === 'all') {
-      PopupView.currentOriginThrottlingDescription.classList.toggle('hide');
-      PopupView.allOriginsThrottlingDescription.classList.toggle('hide');
-    } else {
-      PopupView.allOriginsThrottlingDescription.classList.toggle('hide');
-      PopupView.currentOriginThrottlingDescription.classList.toggle('hide');
-    }
+  static toggleApplyThrottlingDescription() {
+    PopupView.currentOriginThrottlingDescription.classList.toggle('hide');
   }
 
   static close() {
@@ -69,9 +59,7 @@ export class PopupView {
   attachListeners() {
     PopupView.enableThrottlingBtn.addEventListener('click', this.onEnableThrottling);
 
-    this.originsEl.passedElement.element.addEventListener('choice', event => {
-      PopupView.toggleApplyThrottlingDescription(event.detail.choice.value)
-    });
+    this.originsEl.passedElement.element.addEventListener('choice', PopupView.toggleApplyThrottlingDescription);
 
     this.settingsBtn.addEventListener('click', this.toggleSettingsContent.bind(this));
     this.closeBtn.addEventListener('click', PopupView.close);
