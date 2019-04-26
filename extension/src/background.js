@@ -3,7 +3,9 @@ class Storage {
     this.storage = chrome.storage;
 
     this.schema = {
+      // deprecated field
       throttlingEnabled: 'throttlingEnabled',
+      // deprecated field
       applyToAllTabs: 'applyToAllTabs',
       tabsOrigins: 'tabsOrigins',
       autoReloadEnabled: 'autoReloadEnabled'

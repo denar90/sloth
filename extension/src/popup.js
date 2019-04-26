@@ -86,22 +86,12 @@ contentLoaded.then(async () => {
   const view = new PopupView();
   view.onEnableThrottling = async () => {
     const selectedOriginValue = view.originsEl.getValue().value;
-    const enabledToAll = selectedOriginValue === 'all';
     const enabledAutoReloadTabs = PopupView.autoReloadEnabledCheckbox.checked;
 
-    if (enabledToAll) {
-      const tabs = await chromeTabs.getOpenedTabs();
-      for (const tab of tabs) {
-        await attachDebugger(tab);
-        if (enabledAutoReloadTabs) await chromeTabs.reloadTab(tab.id);
-      }
-    } else {
-      await attachDebugger(currentTab);
-      if (enabledAutoReloadTabs) await chromeTabs.reloadTab(currentTab.id);
-    }
+    await attachDebugger(currentTab);
+    if (enabledAutoReloadTabs) await chromeTabs.reloadTab(currentTab.id);
 
     await storage.set(storage.schema.throttlingEnabled, true);
-    await storage.set(storage.schema.applyToAllTabs, enabledToAll);
     await storage.set(storage.schema.autoReloadEnabled, enabledAutoReloadTabs);
     await setOriginToStorage(selectedOriginValue);
     PopupView.close();

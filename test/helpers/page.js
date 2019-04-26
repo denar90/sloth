@@ -1,11 +1,5 @@
 const POPUP_URL = 'chrome-extension://daclkijhjpmgpmjnlppibebgficnlfop/popup.html';
 
-const toggleThrottlingForAllTabs = async page => {
-  await page.waitFor(1000);
-  await changeSelectedTabOriginValue(page, 'all');
-  await applyThrottling(page);
-};
-
 const applyThrottling = async page => {
   page.click('.js-enable-throttling');
   await page.waitFor(2000);
@@ -43,22 +37,6 @@ const applyThrottlingForCurrentTab = async (browser, URL) => {
   }
 };
 
-const applyThrottlingAllTabs = async (browser, URL) => {
-  try {
-    const page = await browser.newPage();
-    await page.goto(URL);
-
-    const extensionPopUpPage = await openExtensionPopUp(browser);
-    await toggleThrottlingForAllTabs(extensionPopUpPage, true);
-
-    await page.reload();
-
-    return page;
-  } catch (e) {
-    throw e;
-  }
-};
-
 const openExtensionPopUp = async browser => {
   const extensionPopUpPage = await browser.newPage();
   await openPopUp(extensionPopUpPage);
@@ -67,8 +45,6 @@ const openExtensionPopUp = async browser => {
 
 
 module.exports = {
-  toggleThrottlingForAllTabs,
   openExtensionPopUp,
   applyThrottlingForCurrentTab,
-  applyThrottlingAllTabs
 };
