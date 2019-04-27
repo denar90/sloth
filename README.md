@@ -4,9 +4,9 @@
 
 Do you think that users have fast device/connection as you as developer has?
 
-No they are not. Their devices/connection are slow! Very slooow!
+No they are not. Their devices/connections are slow! Very slooow!
 
-![](https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif)  
+![](https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif)
 
 ---
 
@@ -32,6 +32,8 @@ So enabling network and cpu throttling to have the same user experience.
 Extension is tested using [puppeteer](https://github.com/GoogleChrome/puppeteer).
 Token was generated to rich tested extension page. It's value stored in fixtures the same as fixture for manifest.json.
 All other files (background.js, popup.html, popup.js) are symlinks (./extension -> ./test/fixtures)
+
+> Note: to update symlink files run: ln -s <fromRoot>/sloth/extension/* <fromRoot>/sloth/test/fixtures
 
 ## Development
 

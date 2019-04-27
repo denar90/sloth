@@ -1,0 +1,151 @@
+@import '~choices.js/src/styles/base.scss';
+@import '~choices.js/src/styles/choices.scss';
+
+body, html {
+  width: 360px;
+  height: auto;
+}
+
+body {
+  color: #47474C;
+  position: relative;
+  background: linear-gradient(180deg, #FFFCE1 0%, #E7E0A2 100%);
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+
+  .hide {
+    display: none;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+}
+
+.popup {
+  &__button {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    margin-bottom: 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    background: #f5ca31;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    outline: none;
+
+    &:hover {
+      background: #e9c02c;
+      box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    &:active {
+      background: #d1ab23;
+    }
+  }
+
+  &__leading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__action {
+    padding: 16px;
+    cursor: pointer;
+    opacity: .8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__content {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 32px;
+    display: flex;
+  }
+
+  &__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    margin-bottom: 16px;
+  }
+
+  &__description {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  &__select {
+    width: 100%;
+    margin-bottom: 24px;
+  }
+}
+
+.checkboxes {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  user-select: none;
+
+  &__value {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    background-color: #ffffff;
+
+    &:checked ~ .checkboxes__icon {
+      background-color: #e9c02c;
+
+      &:after {
+        display: block;
+      }
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #ffffff;
+
+    &:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 9px;
+      top: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid #ffffff;
+      border-width: 0 2px 3px 0;
+      transform: rotate(45deg);
+    }
+  }
+}
+
+.choices__inner {
+  width: 100%;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  border: 0;
+}

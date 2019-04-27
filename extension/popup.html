@@ -2,120 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Enable throttling</title>
-  <style>
-    .container {
-      width: 300px;
-      background: #1f1a25;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: auto;
-      flex-direction: column;
-      padding: 10px 0;
-    }
-    .input-group {
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: center;
-      color: #58afd1;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .input-group label {
-      cursor: pointer;
-      padding: 0 5px;
-    }
-    .input-group select {
-      max-width: 200px;
-    }
-    .input-group select:disabled {
-      color: black;
-      background: gray;
-    }
-    /* button by @Giana - https://codepen.io/giana/pen/xdXpJB */
-    .draw-border {
-      box-shadow: inset 0 0 0 4px #58afd1;
-      color: #58afd1;
-      transition: color 0.25s 0.08333333s;
-      position: relative;
-    }
-    .draw-border::before, .draw-border::after {
-      border: 0 solid transparent;
-      box-sizing: border-box;
-      content: '';
-      pointer-events: none;
-      position: absolute;
-      width: 0;
-      height: 0;
-      bottom: 0;
-      right: 0;
-    }
-    .draw-border::before {
-      border-bottom-width: 4px;
-      border-left-width: 4px;
-    }
-    .draw-border::after {
-      border-top-width: 4px;
-      border-right-width: 4px;
-    }
-    .draw-border:hover,
-    .draw-border:disabled {
-      color: #ffe593;
-    }
-    .draw-border:hover::before, .draw-border:hover::after {
-      border-color: #ffe593;
-      transition: border-color 0s, width 0.25s, height 0.25s;
-      width: 100%;
-      height: 100%;
-    }
-    .draw-border:disabled::before, .draw-border:disabled::after {
-      border-color: #ffe593;
-      transition: none;
-      width: 100%;
-      height: 100%;
-    }
-    .draw-border:hover::before {
-      transition-delay: 0s, 0s, 0.25s;
-    }
-    .draw-border:hover::after {
-      transition-delay: 0s, 0.25s, 0s;
-    }
+  <title>Sloth: Brings connection like your users have to you ;)</title>
 
-    .btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      line-height: 1.5;
-      font: 700 1.2rem 'Roboto Slab', sans-serif;
-      padding: 1em 2em;
-      letter-spacing: 0.05rem;
-    }
-    .btn:focus {
-      outline: 2px dotted #55d7dc;
-    }
-  </style>
+  <!-- External Style -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="dist/popup.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="input-group">
-      <input type="checkbox" id="apply-to-tab" class="js-apply-to-tab" name="apply-to-tab" value="apply-to-tab" checked disabled>
-      <label for="apply-to-tab">Apply to current tab (URL origin)</label>
+  <div class="popup">
+    <div class="popup__leading">
+      <div class="popup__action">
+        <i class="fas fa-cog js-settings-btn"></i>
+      </div>
+      <div class="popup__action">
+        <i class="fas fa-times js-close-btn"></i>
+      </div>
     </div>
-    <div class="input-group">
-      <select name="select" class="js-tabs-origins" disabled>
-      </select>
+    <div class="popup__content js-main-content">
+      <h1 class="popup__title">
+        Sloth
+      </h1>
+      <p class="popup__description">Brings real user experience ;)</p>
+      <div class="popup__select">
+        <select class="form-control js-tabs-origins">
+        </select>
+      </div>
+      <button class="popup__button js-enable-throttling">
+        Apply throttling
+      </button>
+      <div class="popup__description js-current-origin-throttling-description">
+        Will be applied to current tab (URL origin)
+      </div>
     </div>
-    <div class="input-group">
-      <input type="checkbox" id="apply-to-all-tabs" class="js-apply-to-all-tabs" name="apply-to-all-tabs" value="apply-to-all-tabs">
-      <label for="apply-to-all-tabs">Apply to all opened tabs</label>
+    <div class="popup__content js-settings-content hide">
+      <h1 class="popup__title">
+        Sloth Settings
+      </h1>
+      <div class="popup__checkbox">
+        <label class="checkboxes" >Auto reload tab after apply
+          <input type="checkbox" class="checkboxes__value js-reload-tabs" name="reload-tabs" value="reload-tabs" checked>
+          <span class="checkboxes__icon"></span>
+        </label>
+      </div>
     </div>
-    <div class="input-group">
-      <input type="checkbox" id="reload-tabs" class="js-reload-tabs" name="reload-tabs" value="reload-tabs" checked>
-      <label for="reload-tabs">Auto reload tab or tabs after apply</label>
-    </div>
-    <button class="btn draw-border js-enable-throttling" type="button">Apply throttling</button>
   </div>
-  <script src="popup.js"></script>
+
+  <script src="dist/popup.js"></script>
 </body>
 </html>

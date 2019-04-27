@@ -3,7 +3,9 @@ class Storage {
     this.storage = chrome.storage;
 
     this.schema = {
+      // deprecated field
       throttlingEnabled: 'throttlingEnabled',
+      // deprecated field
       applyToAllTabs: 'applyToAllTabs',
       tabsOrigins: 'tabsOrigins',
       autoReloadEnabled: 'autoReloadEnabled'
@@ -16,7 +18,16 @@ class Storage {
     return new Promise((resolve, reject) => {
       this.storage.sync.set(data, () => {
         if (chrome.runtime.lastError) {
-          reject('Value was not set');
+          // The error from the extension has a `message` property that is the
+          // stringified version of the actual protocol error object.
+          const message = chrome.runtime.lastError.message || '';
+          let errorMessage;
+          try {
+            errorMessage = JSON.parse(message).message;
+          } catch (e) {}
+          errorMessage = errorMessage || message || `Value '${value}' was not set`;
+
+          return reject(new Error(errorMessage));
         }
 
         resolve();
@@ -58,14 +69,23 @@ class Debugger {
     this.debugger = chrome.debugger;
   }
 
-  sendCommand(target, method, commandParams = null) {
+  sendCommand(target, method, commandParams) {
     return new Promise((resolve, reject) => {
-      this.debugger.sendCommand(target, method, commandParams, () => {
+      this.debugger.sendCommand(target, method, commandParams || {}, result => {
         if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
+          // The error from the extension has a `message` property that is the
+          // stringified version of the actual protocol error object.
+          const message = chrome.runtime.lastError.message || '';
+          let errorMessage;
+          try {
+            errorMessage = JSON.parse(message).message;
+          } catch (e) {}
+          errorMessage = errorMessage || message || 'Unknown debugger protocol error.';
+
+          return reject(new Error(`Protocol error (${method}): ${errorMessage}`));
         }
 
-        resolve();
+        resolve(result);
       });
     });
   }
@@ -74,7 +94,7 @@ class Debugger {
     return new Promise((resolve,reject) => {
       this.debugger.attach(target, requiredVersion, () => {
         if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
+          return reject(new Error(chrome.runtime.lastError.message));
         }
 
         resolve();
@@ -101,8 +121,11 @@ class Tabs {
       currentWindow: true
     };
 
-    return new Promise(resolve => {
-      chrome.tabs.query(queryInfo, (tabs) => {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.query(queryInfo, tabs => {
+        if (chrome.runtime.lastError) {
+          return reject(new Error(chrome.runtime.lastError.message));
+        }
         resolve(tabs[0]);
       });
     });
@@ -115,12 +138,12 @@ class Tabs {
   onUpdated(cb) {
     this.tabs.onUpdated.addListener(cb);
   }
+
+  reloadTab(tabId) {
+    this.tabs.reload(tabId);
+  }
 }
 
 const storage = window.storage = new Storage();
 const chromeDebugger = window.chromeDebugger = new Debugger();
 const chromeTabs = window.chromeTabs = new Tabs();
-
-chrome.debugger.onDetach.addListener(() => {
-  storage.set(storage.schema.throttlingEnabled, false);
-});
