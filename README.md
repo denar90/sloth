@@ -33,7 +33,7 @@ Extension is tested using [puppeteer](https://github.com/GoogleChrome/puppeteer)
 Token was generated to rich tested extension page. It's value stored in fixtures the same as fixture for manifest.json.
 All other files (background.js, popup.html, popup.js) are symlinks (./extension -> ./test/fixtures)
 
-> Note: to update symlink files run: ln -s <fromRoot>/sloth/extension/* <fromRoot>/sloth/test/fixtures
+> Note: to update symlink files run: ln -s "$(pwd)"/extension/* test/fixtures/
 
 ## Development
 
