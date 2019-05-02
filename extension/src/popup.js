@@ -149,10 +149,12 @@ contentLoaded.then(async () => {
 
     await attachDebuggerToNewTab(tab);
   });
-
+  storage.set(storage.schema.throttlingEnabled, false);
   chromeDebugger.debugger.onDetach.addListener(() => {
     storage.set(storage.schema.throttlingEnabled, false);
   });
 }).catch(e => {
+  // @todo better error catching like https://github.com/GoogleChrome/lighthouse/blob/v4.3.1/clients/extension/scripts/popup.js#L192
+  storage.set(storage.schema.throttlingEnabled, false);
   console.error(e.message);
 });
