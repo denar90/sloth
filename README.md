@@ -20,7 +20,7 @@ No they are not. Their devices/connections are slow! Very slooow! `Sloth` makes 
 
 ### What are the conditions?
 
-`Sloth` applies `4x` CPU throttling and slowind down network to `1.6Mbps` - for download, `750Kbps` - for upload.
+`Sloth` applies `4x` CPU throttling and slowing down network to `1.6Mbps` - for download, `750Kbps` - for upload.
 Interested in optional configurations - take a part in [issue](https://github.com/denar90/sloth/issues/1) discussion 
 
 
