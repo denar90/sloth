@@ -1,39 +1,34 @@
-# Sloth
+# Sloth 
 
-`Sloth` - an extension to make you suffer, browsing the web.
+An extension that slowing down network and CPU and makes you experience web page performance as your real users.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif">
+</p>
 
 Do you think that users have fast device/connection as you as developer has?
 
-No they are not. Their devices/connections are slow! Very slooow!
-
-![](https://user-images.githubusercontent.com/6231516/36938869-cb6b0c92-1f30-11e8-9085-26b386b7a39a.gif)
+No they are not. Their devices/connections are slow! Very slooow! `Sloth` makes you suffer browsing the web like your real users.
 
 ---
-
-So enabling network and cpu throttling to have the same user experience.
-
----
-
-## Conditions:
-
-- CPU: `2x` throttling
-
-- Network connection: `1.6Mbps` - download, `750Kbps` - upload
 
 ## Recently asked questions
 
- - Question: Why do I need it while @chrome-devtools can do the same?
- - Answer: Yes and no. DevTools can do it for opened tab, but you have to do a lot of manipulations to apply throttling (open dev tools, open proper tab, apply throttling etc). This extension is for lazy people, you just press one button and all URLs with same origin will have throttling. Handy isn't it?
+### How it works?
+
+`Sloth` uses [Chrome Devtools Protocol](https://chromedevtools.github.io/devtools-protocol/) to slow down connection and throttle CPU.
+
+### What are the conditions?
+
+`Sloth` applies `4x` CPU throttling and slowind down network to `1.6Mbps` - for download, `750Kbps` - for upload.
+Interested in optional configurations - take a part in [issue](https://github.com/denar90/sloth/issues/1) discussion 
+
+
+### Why do I need it while @chrome-devtools can do the same?
+
+Yes and no. DevTools can do it for opened tab, but you have to do a lot of manipulations to apply throttling (open dev tools, open proper tab, apply throttling etc). This extension is for lazy people, you just press one button and all URLs with same origin will have throttling. Handy isn't it?
  
  ----
-
-## Testing
-
-Extension is tested using [puppeteer](https://github.com/GoogleChrome/puppeteer).
-Token was generated to rich tested extension page. It's value stored in fixtures the same as fixture for manifest.json.
-All other files (background.js, popup.html, popup.js) are symlinks (./extension -> ./test/fixtures)
-
-> Note: to update symlink files run: ln -s "$(pwd)"/extension/* test/fixtures/
 
 ## Development
 
@@ -50,6 +45,14 @@ After adding new permissions commands below has to be run.
 2>/dev/null openssl rsa -in key.pem -pubout -outform DER |  shasum -a 256 | head -c32 | tr 0-9a-f a-p
  
 ```
+
+## Testing
+
+Extension is tested using [puppeteer](https://github.com/GoogleChrome/puppeteer).
+Token was generated to rich tested extension page. It's value stored in fixtures the same as fixture for manifest.json.
+All other files (background.js, popup.html, popup.js) are symlinks (./extension -> ./test/fixtures)
+
+> Note: to update symlink files run: ln -s "$(pwd)"/extension/* test/fixtures/
 
 
 ## Demo
